@@ -9,8 +9,11 @@ from ptbcontrib.ptb_jobstores.sqlalchemy import PTBSQLAlchemyJobStore
 import os
 from start import inits
 
+
 class MyApp:
-    def build_app(self):
+
+    @classmethod
+    def build_app(cls):
         defaults = Defaults(parse_mode=ParseMode.HTML)
         my_persistence = PicklePersistence(
             filepath="data/persistence", single_file=False
