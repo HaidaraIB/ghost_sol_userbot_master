@@ -38,7 +38,6 @@ from start import admin_command
 
 async def ban_unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Admin().filter(update):
-        await update.callback_query.answer()
         await update.callback_query.delete_message()
         await context.bot.send_message(
             chat_id=update.effective_user.id,
@@ -53,7 +52,7 @@ async def ban_unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
                         KeyboardButton(
                             text="اختيار حساب مستخدم",
                             request_users=KeyboardButtonRequestUsers(
-                                request_id=4, user_is_bot=False
+                                request_id=5, user_is_bot=False
                             ),
                         )
                     ]

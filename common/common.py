@@ -24,8 +24,6 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
 )
-if int(os.getenv("OWNER_ID")) != 755501092:
-    logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 def build_user_keyboard():
@@ -40,6 +38,16 @@ def build_admin_keyboard():
                 text="إعدادات الآدمن⚙️🎛",
                 callback_data="admin settings",
             )
+        ],
+        [
+            InlineKeyboardButton(
+                text="إعدادات القنوات",
+                callback_data="channel_settings",
+            ),
+            InlineKeyboardButton(
+                text="إعدادات البوتات",
+                callback_data="bot_settings",
+            ),
         ],
         [
             InlineKeyboardButton(

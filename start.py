@@ -19,7 +19,7 @@ import models
 from common.force_join import check_if_user_member
 
 from custom_filters import Admin
-from common.decorators import check_if_user_banned_dec
+from common.decorators import check_if_user_banned_dec, add_new_user_dec
 from common.common import (
     build_user_keyboard,
     build_admin_keyboard,
@@ -30,6 +30,8 @@ from common.common import (
 async def inits(app: Application):
     await models.Admin.add_new_admin(admin_id=int(os.getenv("OWNER_ID")))
 
+
+@add_new_user_dec
 @check_if_user_banned_dec
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE:
@@ -41,14 +43,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 ),
             ]
         )
-        old_user = models.User.get_user(user_id=update.effective_user.id)
-        if not old_user:
-            new_user = update.effective_user
-            await models.User.add_new_user(
-                user_id=new_user.id,
-                username=new_user.username,
-                name=new_user.full_name,
-            )
 
         member = await check_if_user_member(update=update, context=context)
         if not member:

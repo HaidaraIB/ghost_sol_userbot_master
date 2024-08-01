@@ -18,6 +18,7 @@ import os
 from common.common import build_user_keyboard
 import functools
 
+
 def check_if_user_member_decorator(func):
     @functools.wraps(func)
     async def wrapper(update, context, *args, **kwargs):
@@ -25,6 +26,7 @@ def check_if_user_member_decorator(func):
         if not is_user_member:
             return
         return await func(update, context, *args, **kwargs)
+
     return wrapper
 
 
@@ -60,7 +62,8 @@ async def check_joined(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     if chat_memeber.status == ChatMemberStatus.LEFT:
         await update.callback_query.answer(
-            text="قم بالاشتراك بالقناة أولاً", show_alert=True
+            text="قم بالاشتراك بالقناة أولاً",
+            show_alert=True,
         )
         return
 
@@ -69,6 +72,7 @@ async def check_joined(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text=text,
         reply_markup=build_user_keyboard(),
     )
+
 
 check_joined_handler = CallbackQueryHandler(
     callback=check_joined, pattern="^check joined$"

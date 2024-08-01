@@ -27,7 +27,6 @@ CHOOSE_ADMIN_ID_TO_REMOVE = 0
 
 async def remove_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Admin().filter(update):
-        await update.callback_query.answer()
         admins = models.Admin.get_admin_ids()
         admin_ids_keyboard = [
             [InlineKeyboardButton(text=str(admin.id), callback_data=str(admin.id))]
@@ -53,7 +52,10 @@ async def choose_admin_id_to_remove(update: Update, context: ContextTypes.DEFAUL
             return
 
         await models.Admin.remove_admin(admin_id=admin_id)
-        await update.callback_query.answer(text="تمت إزالة الآدمن بنجاح✅")
+        await update.callback_query.answer(
+            text="تمت إزالة الآدمن بنجاح ✅",
+            show_alert=True,
+        )
         admins = models.Admin.get_admin_ids()
         admin_ids_keyboard = [
             [InlineKeyboardButton(text=str(admin.id), callback_data=str(admin.id))]

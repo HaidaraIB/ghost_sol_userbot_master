@@ -22,13 +22,15 @@ from user.user_calls import *
 
 from admin.admin_calls import *
 from admin.admin_settings import *
+from admin.channels_settings import *
+from admin.bots_settings import *
 from admin.broadcast import *
 from admin.ban import *
 
 from models import create_tables
 
 from MyApp import MyApp
-
+from PyroClientSingleton import PyroClientSingleton
 
 def main():
     create_folders()
@@ -47,6 +49,18 @@ def main():
     app.add_handler(add_admin_handler)
     app.add_handler(remove_admin_handler)
 
+    # CHANNEL SETTINGS
+    app.add_handler(channel_settings_handler)
+    app.add_handler(add_channel_handler)
+    app.add_handler(remove_channel_handler)
+    app.add_handler(show_channel_handler)
+
+    # CHANNEL SETTINGS
+    app.add_handler(bot_settings_handler)
+    app.add_handler(add_bot_handler)
+    app.add_handler(remove_bot_handler)
+    app.add_handler(show_bot_handler)
+
     app.add_handler(broadcast_message_handler)
 
     app.add_handler(check_joined_handler)
@@ -62,4 +76,14 @@ def main():
 
     app.add_error_handler(error_handler)
 
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    try:
+        PyroClientSingleton().start()
+    except ConnectionError:
+        pass
+
+    app.run_polling(allowed_updates=Update.ALL_TYPES, close_loop=False)
+
+    try:
+        PyroClientSingleton().stop()
+    except ConnectionError:
+        pass

@@ -1,6 +1,6 @@
 data/*
 .env
 __pycache__/
-session.session
+*.session*
 test.py
 errors.txt

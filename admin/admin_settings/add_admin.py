@@ -29,7 +29,6 @@ NEW_ADMIN_ID = 0
 
 async def add_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Admin().filter(update):
-        await update.callback_query.answer()
         await update.callback_query.delete_message()
         await context.bot.send_message(
             chat_id=update.effective_user.id,
