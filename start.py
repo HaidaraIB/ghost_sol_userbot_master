@@ -22,10 +22,10 @@ from custom_filters import Admin
 
 from ClientSingleton import ClientSingleton
 
-from common.force_join import check_if_user_member
-from common.decorators import check_if_user_banned_dec, add_new_user_dec
+from common.decorators import (
+    add_new_user_dec,
+)
 from common.common import (
-    build_user_keyboard,
     build_admin_keyboard,
     request_buttons,
 )
@@ -37,26 +37,8 @@ async def inits(app: Application):
 
 
 @add_new_user_dec
-@check_if_user_banned_dec
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE:
-        await context.bot.set_my_commands(
-            commands=[
-                BotCommand(
-                    command="start",
-                    description="home page",
-                ),
-            ]
-        )
-
-        member = await check_if_user_member(update=update, context=context)
-        if not member:
-            return
-
-        await update.message.reply_text(
-            text="أهلاً بك...",
-            reply_markup=build_user_keyboard(),
-        )
         return ConversationHandler.END
 
 

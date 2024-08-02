@@ -16,8 +16,6 @@ from common.back_to_home_page import (
     back_to_user_home_page_handler,
 )
 
-from common.force_join import check_joined_handler
-
 from user.user_calls import *
 
 from admin.admin_calls import *
@@ -65,8 +63,6 @@ def main():
     app.add_handler(show_bot_handler)
 
     app.add_handler(broadcast_message_handler)
-
-    app.add_handler(check_joined_handler)
 
     app.add_handler(ban_unban_user_handler)
 

@@ -10,7 +10,6 @@ from telegram.ext import (
     ConversationHandler,
 )
 
-from common.force_join import check_if_user_member_decorator
 from common.common import build_user_keyboard, build_admin_keyboard
 from common.constants import *
 
@@ -36,7 +35,6 @@ back_to_user_home_page_button = [
 ]
 
 
-@check_if_user_member_decorator
 async def back_to_user_home_page(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and User().filter(update):
         await update.callback_query.edit_message_text(

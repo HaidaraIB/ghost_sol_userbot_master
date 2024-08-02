@@ -5,6 +5,7 @@ from common.constants import *
 import models
 import re
 
+
 def extract_matches(net, text):
     matches = []
     if net in ["solana", "both"]:
@@ -43,6 +44,8 @@ async def copy_messages(event: events.NewMessage.Event | events.Album.Event):
 
     stored_msg = None
     if event.is_reply:
+        if not ch.for_rep:
+            return
         stored_msg = models.Message.get_one(
             from_message_id=message.reply_to_msg_id,
             from_channel_id=event.chat_id,
