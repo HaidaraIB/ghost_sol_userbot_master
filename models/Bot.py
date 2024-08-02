@@ -41,8 +41,11 @@ class Bot(Base):
 
     @staticmethod
     @connect_and_close
-    def get_one(bot_id: int, s: Session = None):
-        res = s.execute(select(Bot).where(Bot.id == bot_id))
+    def get_one(bot_id: int = None, active:bool = None, s: Session = None):
+        if bot_id:
+            res = s.execute(select(Bot).where(Bot.id == bot_id))
+        elif active:
+            res = s.execute(select(Bot).where(Bot.on == True))
         try:
             return res.fetchone().t[0]
         except:

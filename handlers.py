@@ -30,7 +30,10 @@ from admin.ban import *
 from models import create_tables
 
 from MyApp import MyApp
-from PyroClientSingleton import PyroClientSingleton
+
+from ClientSingleton import ClientSingleton
+from copy_messages import copy_messages
+from telethon.events import NewMessage, Album
 
 def main():
     create_folders()
@@ -76,14 +79,12 @@ def main():
 
     app.add_error_handler(error_handler)
 
-    try:
-        PyroClientSingleton().start()
-    except ConnectionError:
-        pass
+
+    ClientSingleton().add_event_handler(
+        callback=copy_messages,
+        event=NewMessage(outgoing=False)
+    )
 
     app.run_polling(allowed_updates=Update.ALL_TYPES, close_loop=False)
 
-    try:
-        PyroClientSingleton().stop()
-    except ConnectionError:
-        pass
+    ClientSingleton().disconnect()

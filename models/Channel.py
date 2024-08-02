@@ -6,6 +6,7 @@ from sqlalchemy import (
     select,
     insert,
     delete,
+    and_,
 )
 from models.DB import (
     Base,
@@ -20,15 +21,23 @@ class Channel(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     username = Column(String)
-    link = Column(String)
     net = Column(String)
     for_rep = Column(Boolean)
     for_on = Column(Boolean, default=1)
 
     @staticmethod
     @connect_and_close
-    def get_all(s: Session = None):
-        res = s.execute(select(Channel))
+    def get_all(for_on: bool = None, for_rep: bool = None, s: Session = None):
+        if for_on or for_rep:
+            if for_on and for_rep:
+                where_clause = and_(Channel.for_rep == for_rep, Channel.for_on == for_on)
+            elif for_rep:
+                where_clause = Channel.for_rep == for_rep
+            else:
+                where_clause = Channel.for_on == for_on
+            res = s.execute(select(Channel).where(where_clause))
+        else:
+            res = s.execute(select(Channel))
         try:
             return list(map(lambda x: x[0], res.tuples().all()))
         except:
@@ -49,7 +58,6 @@ class Channel(Base):
         channel_id: int,
         name: str,
         username: str,
-        link: str,
         net: str,
         for_rep: bool,
         s: Session = None,
@@ -60,7 +68,6 @@ class Channel(Base):
                 id=channel_id,
                 name=name,
                 username=username,
-                link=link,
                 net=net,
                 for_rep=for_rep,
             )

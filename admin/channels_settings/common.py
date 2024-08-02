@@ -22,40 +22,39 @@ channel_settings_keyboard = [
 ]
 
 
-def build_update_channel_keyboard(channel:models.Channel):
+def build_update_channel_keyboard(channel: models.Channel):
     keyboard = [
         [
             InlineKeyboardButton(
-                text=f"إيثيريوم {"🟢" if channel.net in ["eth", 'both'] else "🔴"}",
-                callback_data="update_net_eth"
+                text=f"إيثيريوم {'🟢' if channel.net in ['eth', 'both'] else '🔴'}",
+                callback_data="update_net_eth",
             ),
             InlineKeyboardButton(
-                text=f"سولانا {"🟢" if channel.net in ["solana", 'both'] else "🔴"}",
-                callback_data="update_net_solana"
+                text=f"سولانا {'🟢' if channel.net in ['solana', 'both'] else '🔴'}",
+                callback_data="update_net_solana",
             ),
         ],
         [
             InlineKeyboardButton(
-                text=f"تفعيل التحويل{"🟢" if channel.for_on else "🔴"}",
-                callback_data="update_for_on"
+                text=f"تفعيل التحويل{'🟢' if channel.for_on else '🔴'}",
+                callback_data="update_for_on",
             ),
             InlineKeyboardButton(
-                text=f"تحويل الردود {"🟢" if channel.for_rep else "🔴"}",
-                callback_data="update_for_rep"
+                text=f"تحويل الردود {'🟢' if channel.for_rep else '🔴'}",
+                callback_data="update_for_rep",
             ),
-        ]
+        ],
     ]
     return keyboard
 
-def stringify_channel_info(channel:models.Channel):
+
+def stringify_channel_info(channel: models.Channel):
     return (
         f"آيدي القناة:\n<code>{channel.id}</code>\n"
         f"اسم القناة: <b>{channel.name}</b>\n"
         f"اليوزر: {channel.username}\n"
-        f"الرابط: {channel.link}\n"
-        f"الشبكة: <b>{channel.net}</b>\n"
-        f"التحويل: {"🟢" if channel.for_rep else "🔴"}\n"
     )
+
 
 async def back_to_channel_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Admin().filter(update):
@@ -69,18 +68,21 @@ async def back_to_channel_settings(update: Update, context: ContextTypes.DEFAULT
 
 def build_channels_keyboard():
     channels = models.Channel.get_all()
+    back_buttons = [
+        build_back_button("back_to_channel_settings"),
+        back_to_admin_home_page_button[0],
+    ]
     if not channels:
-        return False
+        return back_buttons
     channels_keyboard = [
         [InlineKeyboardButton(text=str(channel.name), callback_data=str(channel.id))]
         for channel in channels
     ]
-    channels_keyboard.append(build_back_button("back_to_channel_settings"))
-    channels_keyboard.append(back_to_admin_home_page_button[0])
+    for back_button in back_buttons:
+        channels_keyboard.append(back_button)
     return InlineKeyboardMarkup(channels_keyboard)
 
 
 channel_settings_handler = CallbackQueryHandler(
-    back_to_channel_settings,
-    "^channel_settings$"
+    back_to_channel_settings, "^channel_settings$"
 )

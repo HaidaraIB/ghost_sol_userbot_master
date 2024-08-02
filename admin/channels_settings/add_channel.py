@@ -26,9 +26,8 @@ from common.back_to_home_page import (
     back_to_admin_home_page_handler,
     back_to_admin_home_page_button,
 )
-from PyroClientSingleton import PyroClientSingleton
-import pyrogram
-
+from ClientSingleton import ClientSingleton
+from telethon.hints import Entity
 (
     NEW_CHANNEL,
     CHOOSE_NET,
@@ -82,8 +81,9 @@ async def new_channel(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await update.message.reply_text(text="هذه القناة مضافة بالفعل")
                 return
 
+            context.user_data["add_channel_chat_id"] = channel_id
             context.user_data["add_channel_chat"] = (
-                await PyroClientSingleton().get_chat(chat_id=channel_id)
+                await ClientSingleton().get_entity(entity=channel_id)
             )
             await update.message.reply_text(
                 text="تم العثور على القناة ✅.",
@@ -137,9 +137,9 @@ back_to_choose_net = new_channel
 
 async def for_rep(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
-        chat: pyrogram.types.Chat = context.user_data["add_channel_chat"]
+        chat: Entity = context.user_data["add_channel_chat"]
         await models.Channel.add(
-            channel_id=chat.id,
+            channel_id=context.user_data["add_channel_chat_id"],
             name=(
                 chat.title
                 if chat.title
@@ -150,7 +150,6 @@ async def for_rep(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 )
             ),
             username="@" + chat.username if chat.username else "لا يوجد",
-            link=chat.invite_link if chat.invite_link else "لا يوجد",
             net=context.user_data["add_channel_net"],
             for_rep=update.callback_query.data.startswith("yes"),
         )

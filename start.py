@@ -16,9 +16,13 @@ from telegram.ext import (
 
 import os
 import models
-from common.force_join import check_if_user_member
+import asyncio
 
 from custom_filters import Admin
+
+from ClientSingleton import ClientSingleton
+
+from common.force_join import check_if_user_member
 from common.decorators import check_if_user_banned_dec, add_new_user_dec
 from common.common import (
     build_user_keyboard,
@@ -28,6 +32,7 @@ from common.common import (
 
 
 async def inits(app: Application):
+    asyncio.create_task(ClientSingleton.request_updates())
     await models.Admin.add_new_admin(admin_id=int(os.getenv("OWNER_ID")))
 
 
