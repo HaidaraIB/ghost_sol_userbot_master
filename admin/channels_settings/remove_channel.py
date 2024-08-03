@@ -25,8 +25,9 @@ CHOOSE_CHANNEL_TO_REMOVE = 0
 
 async def remove_channel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Admin().filter(update):
-        if update.callback_query.data[2:].isnumeric():
-            await models.Channel.remove(channel_id=int(update.callback_query.data[1:]))
+        data = update.callback_query.data.split("_")
+        if data[-1][1:].isnumeric():
+            await models.Channel.remove(channel_id=int(data[-1]))
             await update.callback_query.answer(
                 text="تمت إزالة القناة بنجاح ✅",
                 show_alert=True,
@@ -65,7 +66,7 @@ remove_channel_handler = ConversationHandler(
         CHOOSE_CHANNEL_TO_REMOVE: [
             CallbackQueryHandler(
                 remove_channel,
-                "^r-?\d+$",
+                "^r_ch",
             ),
         ]
     },

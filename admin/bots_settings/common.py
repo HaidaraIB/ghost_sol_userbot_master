@@ -65,7 +65,7 @@ def build_bots_keyboard(op:str):
     if not bots:
         return back_buttons
     bots_keyboard = [
-        [InlineKeyboardButton(text=f"{bot.name} {"🟢" if bot.on else ""}", callback_data=f"{op}{bot.id}")]
+        [InlineKeyboardButton(text=f"{bot.name} {"🟢" if bot.on else ""}", callback_data=f"{op}_bot_{bot.id}")]
         for bot in bots
     ]
     for back_button in back_buttons:

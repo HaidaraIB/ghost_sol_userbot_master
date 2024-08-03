@@ -50,8 +50,8 @@ async def show_bots(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def choose_bot_to_show(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
-        context.user_data["bot_id_to_show"] = int(update.callback_query.data[1:])
-        bot = models.Bot.get_one(bot_id=int(update.callback_query.data))
+        context.user_data["bot_id_to_show"] = int(update.callback_query.data.split("_")[-1])
+        bot = models.Bot.get_one(bot_id=int(context.user_data["bot_id_to_show"]))
         keyboard = build_update_bot_keyboard(bot)
         keyboard.append(build_back_button("back_to_choose_bot_to_show"))
         keyboard.append(back_to_admin_home_page_button[0])
@@ -126,7 +126,7 @@ show_bot_handler = ConversationHandler(
         )
     ],
     states={
-        CHOOSE_BOT_TO_SHOW: [CallbackQueryHandler(choose_bot_to_show, "^s-?\d+$")],
+        CHOOSE_BOT_TO_SHOW: [CallbackQueryHandler(choose_bot_to_show, "^s_bot")],
         CHOOSE_UPDATE_BOT: [
             CallbackQueryHandler(choose_update_bot, "^((update_bot)|(activate_bot))")
         ],

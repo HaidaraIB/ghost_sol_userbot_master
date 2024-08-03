@@ -48,8 +48,8 @@ async def show_channels(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def choose_channel_to_show(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
-        context.user_data["ch_id_to_show"] = int(update.callback_query.data[1:])
-        ch = models.Channel.get_one(ch_id=int(update.callback_query.data))
+        context.user_data["ch_id_to_show"] = int(update.callback_query.data.split("_")[-1])
+        ch = models.Channel.get_one(ch_id=context.user_data["ch_id_to_show"])
         keyboard = build_update_channel_keyboard(ch)
         keyboard.append(build_back_button("back_to_choose_channel_to_show"))
         keyboard.append(back_to_admin_home_page_button[0])
@@ -112,7 +112,7 @@ show_channel_handler = ConversationHandler(
     ],
     states={
         CHOOSE_CHANNEL_TO_SHOW: [
-            CallbackQueryHandler(choose_channel_to_show, "^s-?\d+$")
+            CallbackQueryHandler(choose_channel_to_show, "^s_ch")
         ],
         CHOOSE_UPDATE_CHANNEL: [CallbackQueryHandler(choose_update_channel, "^update")],
     },

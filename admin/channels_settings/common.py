@@ -75,7 +75,7 @@ def build_channels_keyboard(op:str):
     if not channels:
         return back_buttons
     channels_keyboard = [
-        [InlineKeyboardButton(text=f"{channel.name} {"🟢" if channel.for_on else ""}", callback_data=f"{op}{channel.id}")]
+        [InlineKeyboardButton(text=f"{channel.name} {"🟢" if channel.for_on else ""}", callback_data=f"{op}_ch_{channel.id}")]
         for channel in channels
     ]
     for back_button in back_buttons:
