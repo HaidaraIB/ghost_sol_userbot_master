@@ -34,6 +34,10 @@ async def copy_messages(event: events.NewMessage.Event | events.Album.Event):
 
     message: Message = event.message
     ch = models.Channel.get_one(ch_id=event.chat_id)
+
+    if message.is_reply and not ch.for_rep:
+        return
+    
     matches = extract_matches(net=ch.net, text=message.text)
     if not matches:
         return
