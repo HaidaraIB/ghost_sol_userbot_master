@@ -42,21 +42,10 @@ async def copy_messages(event: events.NewMessage.Event | events.Album.Event):
     if not active_bot:
         return
 
-    stored_msg = None
-    if event.is_reply:
-        if not ch.for_rep:
-            return
-        stored_msg = models.Message.get_one(
-            from_message_id=message.reply_to_msg_id,
-            from_channel_id=event.chat_id,
-            to_channel_id=active_bot.id,
-        )
-
     for m in matches:
         msg = await ClientSingleton().send_message(
             active_bot.id,
             m,
-            reply_to=stored_msg.to_message_id if stored_msg else None,
         )
         await models.Message.add(
             from_message_id=message.id,
