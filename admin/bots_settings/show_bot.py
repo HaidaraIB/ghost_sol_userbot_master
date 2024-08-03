@@ -70,14 +70,6 @@ async def choose_update_bot(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
         bot = models.Bot.get_one(bot_id=context.user_data["bot_id_to_show"])
         if update.callback_query.data.startswith("activate_bot"):
-            active_bot = models.Bot.check_active()
-            if not bot.on and active_bot:
-                await update.callback_query.answer(
-                    text=f"لا يمكنك تفعيل أكثر من بوت واحد، الآن بوت {active_bot.name} فعال.",
-                    show_alert=True,
-                )
-                return
-
             await models.Bot.update(
                 bot_id=context.user_data["bot_id_to_show"], on=(not bot.on)
             )

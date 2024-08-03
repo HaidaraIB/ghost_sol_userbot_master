@@ -23,15 +23,6 @@ class Bot(Base):
 
     @staticmethod
     @connect_and_close
-    def check_active(s: Session = None):
-        res = s.execute(select(Bot).where(Bot.on == True))
-        try:
-            return res.fetchone().t[0]
-        except:
-            pass
-
-    @staticmethod
-    @connect_and_close
     def get_all(s: Session = None):
         res = s.execute(select(Bot))
         try:
@@ -41,7 +32,7 @@ class Bot(Base):
 
     @staticmethod
     @connect_and_close
-    def get_one(bot_id: int = None, active:bool = None, s: Session = None):
+    def get_one(bot_id: int = None, active: bool = None, s: Session = None):
         if bot_id:
             res = s.execute(select(Bot).where(Bot.id == bot_id))
         elif active:
@@ -80,4 +71,5 @@ class Bot(Base):
             values[Bot.name] = name
         if on is not None:
             values[Bot.on] = on
+            s.query(Bot).update({Bot.on: False})
         s.query(Bot).filter_by(id=bot_id).update(values)

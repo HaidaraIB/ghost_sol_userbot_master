@@ -14,6 +14,7 @@ from telegram.ext import (
 
 from common.common import (
     build_admin_keyboard,
+    build_back_button
 )
 
 from common.back_to_home_page import (
@@ -55,12 +56,7 @@ async def the_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     text="مستخدمين محددين👤", callback_data="specific users"
                 ),
             ],
-            [
-                InlineKeyboardButton(
-                    text="الرجوع🔙",
-                    callback_data="back to the message",
-                )
-            ],
+            build_back_button("back to the message"),
             back_to_admin_home_page_button[0],
         ]
         await update.message.reply_text(
@@ -113,11 +109,7 @@ async def send_to(update: Update, context: ContextTypes.DEFAULT_TYPE):
                         text="تم الانتهاء👍", callback_data="done entering users"
                     )
                 ],
-                [
-                    InlineKeyboardButton(
-                        text="الرجوع🔙", callback_data="back to send to"
-                    )
-                ],
+                build_back_button("back to send to"),
                 back_to_admin_home_page_button[0],
             ]
             await update.callback_query.edit_message_text(
@@ -138,12 +130,7 @@ async def back_to_send_to(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     text="مستخدمين محددين👤", callback_data="specific users"
                 ),
             ],
-            [
-                InlineKeyboardButton(
-                    text="الرجوع🔙",
-                    callback_data="back to the message",
-                )
-            ],
+            build_back_button("back to the message"),
             back_to_admin_home_page_button[0],
         ]
         await update.callback_query.edit_message_text(

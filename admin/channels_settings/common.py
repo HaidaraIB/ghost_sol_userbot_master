@@ -17,7 +17,7 @@ channel_settings_keyboard = [
         InlineKeyboardButton(text="إضافة قناة ➕", callback_data="add channel"),
         InlineKeyboardButton(text="حذف قناة ✖️", callback_data="remove channel"),
     ],
-    [InlineKeyboardButton(text="قائمة القنوات", callback_data="show channels")],
+    [InlineKeyboardButton(text="قائمة القنوات 📋", callback_data="show channels")],
     back_to_admin_home_page_button[0],
 ]
 

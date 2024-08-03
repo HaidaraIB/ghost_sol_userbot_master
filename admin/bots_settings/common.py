@@ -19,7 +19,7 @@ bot_settings_keyboard = [
         InlineKeyboardButton(text="إضافة بوت ➕", callback_data="add bot"),
         InlineKeyboardButton(text="حذف بوت ✖️", callback_data="remove bot"),
     ],
-    [InlineKeyboardButton(text="قائمة البوتات", callback_data="show bots")],
+    [InlineKeyboardButton(text="قائمة البوتات 📋", callback_data="show bots")],
     back_to_admin_home_page_button[0],
 ]
 
@@ -44,7 +44,6 @@ def stringify_bot_info(bot:models.Bot):
     return (
         f"آيدي البوت:\n<code>{bot.id}</code>\n"
         f"اسم البوت: <b>{bot.name}</b>\n"
-        f"فعال: {"🟢" if bot.on else "🔴"}\n"
     )
 
 async def back_to_bot_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):

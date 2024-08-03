@@ -6,6 +6,7 @@ from telegram import (
     KeyboardButtonRequestUsers,
     ReplyKeyboardRemove,
     InlineKeyboardMarkup,
+    InlineKeyboardButton,
 )
 from telegram.ext import (
     ContextTypes,
@@ -29,7 +30,8 @@ from common.back_to_home_page import (
 (
     NEW_BOT,
     NAME,
-) = range(2)
+    ACTIVATE,
+) = range(3)
 
 
 async def add_bot(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -94,12 +96,42 @@ back_to_new_bot = add_bot
 
 async def get_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
+        keyboard = [
+            [
+                InlineKeyboardButton(text="نعم", callback_data="yes_activate_bot"),
+                InlineKeyboardButton(text="لا", callback_data="no_activate_bot"),
+            ],
+            build_back_button("back_to_get_name"),
+            back_to_admin_home_page_button[0],
+        ]
+        if update.message:
+            context.user_data["add_bot_name"] = update.message.text
+            await update.message.reply_text(
+                text="هل تريد تفعيل البوت؟", reply_markup=InlineKeyboardMarkup(keyboard)
+            )
+        else:
+            await update.callback_query.edit_message_text(
+                text="هل تريد تفعيل البوت؟", reply_markup=InlineKeyboardMarkup(keyboard)
+            )
+        return ACTIVATE
+
+
+back_to_get_name = new_bot
+
+
+async def activate(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
         await models.Bot.add(
             bot_id=context.user_data["add_bot_id"],
-            name=update.message.text,
+            name=context.user_data["add_bot_name"],
         )
-        await update.message.reply_text(
-            text="تمت إضافة البوت بنجاح، البوت غير فعال افتراضياً، يمكنك التعديل عليه من خلال زر قائمة البوتات.",
+        if update.callback_query.data.startswith("yes"):
+            await models.Bot.update(
+                bot_id=context.user_data["add_bot_id"],
+                on=True,
+            )
+        await update.callback_query.edit_message_text(
+            text="تمت إضافة البوت بنجاح، يمكنك التعديل عليه من خلال زر قائمة البوتات.",
             reply_markup=build_admin_keyboard(),
         )
         return ConversationHandler.END
@@ -121,6 +153,12 @@ add_bot_handler = ConversationHandler(
         ],
         NAME: [
             MessageHandler(filters=filters.TEXT & ~filters.COMMAND, callback=get_name)
+        ],
+        ACTIVATE: [
+            CallbackQueryHandler(
+                activate,
+                "^((yes)|(no))_activate_bot$",
+            )
         ],
     },
     fallbacks=[

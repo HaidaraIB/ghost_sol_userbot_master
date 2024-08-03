@@ -31,7 +31,7 @@ from MyApp import MyApp
 
 from ClientSingleton import ClientSingleton
 from copy_messages import copy_messages
-from telethon.events import NewMessage, Album
+from telethon.events import NewMessage
 
 def main():
     create_folders()
@@ -78,7 +78,7 @@ def main():
 
     ClientSingleton().add_event_handler(
         callback=copy_messages,
-        event=NewMessage(outgoing=False)
+        event=NewMessage()
     )
 
     app.run_polling(allowed_updates=Update.ALL_TYPES, close_loop=False)
