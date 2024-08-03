@@ -31,7 +31,7 @@ import models
 
 async def show_channels(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
-        keyboard = build_channels_keyboard()
+        keyboard = build_channels_keyboard('s')
         if not isinstance(keyboard, InlineKeyboardMarkup) and len(keyboard) == 2:
             await update.callback_query.answer(
                 text="ليس لديك قنوات",
@@ -48,7 +48,7 @@ async def show_channels(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def choose_channel_to_show(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
-        context.user_data["ch_id_to_show"] = int(update.callback_query.data)
+        context.user_data["ch_id_to_show"] = int(update.callback_query.data[1:])
         ch = models.Channel.get_one(ch_id=int(update.callback_query.data))
         keyboard = build_update_channel_keyboard(ch)
         keyboard.append(build_back_button("back_to_choose_channel_to_show"))
@@ -112,7 +112,7 @@ show_channel_handler = ConversationHandler(
     ],
     states={
         CHOOSE_CHANNEL_TO_SHOW: [
-            CallbackQueryHandler(choose_channel_to_show, "^-?\d+$")
+            CallbackQueryHandler(choose_channel_to_show, "^s-?\d+$")
         ],
         CHOOSE_UPDATE_CHANNEL: [CallbackQueryHandler(choose_update_channel, "^update")],
     },

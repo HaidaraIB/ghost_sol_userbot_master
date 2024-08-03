@@ -56,16 +56,20 @@ async def back_to_bot_settings(update: Update, context: ContextTypes.DEFAULT_TYP
             return ConversationHandler.END
 
 
-def build_bots_keyboard():
+def build_bots_keyboard(op:str):
     bots = models.Bot.get_all()
+    back_buttons = [
+        build_back_button("back_to_bot_settings"),
+        back_to_admin_home_page_button[0],
+    ]
     if not bots:
-        return False
+        return back_buttons
     bots_keyboard = [
-        [InlineKeyboardButton(text=f"{bot.name} {"🟢" if bot.on else ""}", callback_data=str(bot.id))]
+        [InlineKeyboardButton(text=f"{bot.name} {"🟢" if bot.on else ""}", callback_data=f"{op}{bot.id}")]
         for bot in bots
     ]
-    bots_keyboard.append(build_back_button("back_to_bot_settings"))
-    bots_keyboard.append(back_to_admin_home_page_button[0])
+    for back_button in back_buttons:
+        bots_keyboard.append(back_button)
     return InlineKeyboardMarkup(bots_keyboard)
 
 

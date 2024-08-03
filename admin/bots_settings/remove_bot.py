@@ -25,14 +25,14 @@ CHOOSE_BOT_TO_REMOVE = 0
 
 async def remove_bot(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Admin().filter(update):
-        if update.callback_query.data[1:].isnumeric():
-            await models.Bot.remove(bot_id=int(update.callback_query.data))
+        if update.callback_query.data[2:].isnumeric():
+            await models.Bot.remove(bot_id=int(update.callback_query.data[1:]))
             await update.callback_query.answer(
                 text="تمت إزالة البوت بنجاح ✅",
                 show_alert=True,
             )
 
-        keyboard = build_bots_keyboard()
+        keyboard = build_bots_keyboard('r')
         
         if not isinstance(keyboard, InlineKeyboardMarkup) and len(keyboard) == 2:
             await update.callback_query.answer(

@@ -66,7 +66,7 @@ async def back_to_channel_settings(update: Update, context: ContextTypes.DEFAULT
             return ConversationHandler.END
 
 
-def build_channels_keyboard():
+def build_channels_keyboard(op:str):
     channels = models.Channel.get_all()
     back_buttons = [
         build_back_button("back_to_channel_settings"),
@@ -75,7 +75,7 @@ def build_channels_keyboard():
     if not channels:
         return back_buttons
     channels_keyboard = [
-        [InlineKeyboardButton(text=str(channel.name), callback_data=str(channel.id))]
+        [InlineKeyboardButton(text=f"{channel.name} {"🟢" if channel.for_on else ""}", callback_data=f"{op}{channel.id}")]
         for channel in channels
     ]
     for back_button in back_buttons:
