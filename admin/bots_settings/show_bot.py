@@ -35,13 +35,12 @@ import models
 async def show_bots(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
         keyboard = build_bots_keyboard()
-        if not keyboard:
+        if not isinstance(keyboard, InlineKeyboardMarkup) and len(keyboard) == 2:
             await update.callback_query.answer(
-                text="ليس لديك بوتات بعد",
+                text="ليس لديك بوتات",
                 show_alert=True,
             )
             return
-
         await update.callback_query.edit_message_text(
             text="اختر البوت",
             reply_markup=keyboard,

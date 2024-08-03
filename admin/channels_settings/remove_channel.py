@@ -33,7 +33,7 @@ async def remove_channel(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         keyboard = build_channels_keyboard()
 
-        if len(keyboard) == 2:
+        if not isinstance(keyboard, InlineKeyboardMarkup) and len(keyboard) == 2:
             await update.callback_query.answer(
                 text="ليس لديك قنوات",
                 show_alert=True,

@@ -32,7 +32,7 @@ import models
 async def show_channels(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_chat.type == Chat.PRIVATE and Owner().filter(update):
         keyboard = build_channels_keyboard()
-        if len(keyboard) == 2:
+        if not isinstance(keyboard, InlineKeyboardMarkup) and len(keyboard) == 2:
             await update.callback_query.answer(
                 text="ليس لديك قنوات",
                 show_alert=True,
