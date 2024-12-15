@@ -1,34 +1,12 @@
-from telegram import (
-    Update,
-    Chat,
-    ReplyKeyboardMarkup,
-    BotCommand,
-    ReplyKeyboardRemove,
-)
-
-from telegram.ext import (
-    CommandHandler,
-    ContextTypes,
-    Application,
-    ConversationHandler,
-)
-
-
+from telegram import Update, Chat, ReplyKeyboardMarkup, BotCommand, ReplyKeyboardRemove
+from telegram.ext import CommandHandler, ContextTypes, Application, ConversationHandler
 import os
 import models
 import asyncio
-
 from custom_filters import Admin
-
 from ClientSingleton import ClientSingleton
-
-from common.decorators import (
-    add_new_user_dec,
-)
-from common.common import (
-    build_admin_keyboard,
-    request_buttons,
-)
+from common.decorators import add_new_user_dec
+from common.common import build_admin_keyboard, request_buttons
 
 
 async def inits(app: Application):

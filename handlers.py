@@ -1,16 +1,7 @@
-from telegram import (
-    Update,
-)
-
-from telegram.ext import (
-    CallbackQueryHandler,
-    InvalidCallbackData,
-)
-
+from telegram import Update
+from telegram.ext import CallbackQueryHandler, InvalidCallbackData
 from start import start_command, admin_command
-
 from common.common import invalid_callback_data, error_handler, create_folders
-
 from common.back_to_home_page import (
     back_to_admin_home_page_handler,
     back_to_user_home_page_handler,
@@ -31,12 +22,13 @@ from MyApp import MyApp
 
 from ClientSingleton import ClientSingleton
 from copy_messages import copy_messages
-from telethon.events import NewMessage
+from telethon.events import NewMessage, MessageEdited
+
 
 def main():
     create_folders()
     create_tables()
-    
+
     app = MyApp.build_app()
 
     app.add_handler(
@@ -75,10 +67,19 @@ def main():
 
     app.add_error_handler(error_handler)
 
-
     ClientSingleton().add_event_handler(
         callback=copy_messages,
-        event=NewMessage()
+        event=NewMessage(
+            outgoing=False,
+            incoming=True,
+        ),
+    )
+    ClientSingleton().add_event_handler(
+        callback=copy_messages,
+        event=MessageEdited(
+            outgoing=False,
+            incoming=True,
+        ),
     )
 
     app.run_polling(allowed_updates=Update.ALL_TYPES, close_loop=False)

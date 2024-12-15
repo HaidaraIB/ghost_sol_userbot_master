@@ -21,5 +21,5 @@ class ClientSingleton(TelegramClient):
         client = ClientSingleton()
         while True:
             await client.catch_up()
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.1)
 
