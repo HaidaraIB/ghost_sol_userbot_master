@@ -28,6 +28,7 @@ from common.back_to_home_page import (
 )
 from ClientSingleton import ClientSingleton
 from telethon.hints import Entity
+
 (
     NEW_CHANNEL,
     CHOOSE_NET,
@@ -82,17 +83,21 @@ async def new_channel(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 return
 
             context.user_data["add_channel_chat_id"] = channel_id
-            context.user_data["add_channel_chat"] = (
-                await ClientSingleton().get_entity(entity=channel_id)
-            )
-            await update.message.reply_text(
-                text="تم العثور على القناة ✅.",
-                reply_markup=ReplyKeyboardRemove(),
-            )
-            await update.message.reply_text(
-                text="اختر الشبكة",
-                reply_markup=InlineKeyboardMarkup(net_keyboard),
-            )
+            try:
+                context.user_data["add_channel_chat"] = (
+                    await ClientSingleton().get_entity(entity=channel_id)
+                )
+                await update.message.reply_text(
+                    text="تم العثور على القناة ✅.",
+                    reply_markup=ReplyKeyboardRemove(),
+                )
+                await update.message.reply_text(
+                    text="اختر الشبكة",
+                    reply_markup=InlineKeyboardMarkup(net_keyboard),
+                )
+            except ValueError:
+                await update.message.reply_text(text="لم يتم العثور على القناة")
+                return
         else:
             await update.callback_query.edit_message_text(
                 text="اختر الشبكة",
